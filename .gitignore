@@ -1,3 +1,6 @@
 STM32CubeMX/EWARM/settings/
 STM32CubeMX/EWARM/STM32CubeMX/
 STM32CubeMX/EWARM/*.dep
+Workspace/EWARM/settings/
+Workspace/EWARM/STM32CubeMX/
+Workspace/EWARM/*.dep
