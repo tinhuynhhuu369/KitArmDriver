@@ -61,6 +61,8 @@ void Error_Handler(void);
 #define Y0_GPIO_Port GPIOE
 #define Y1_Pin GPIO_PIN_6
 #define Y1_GPIO_Port GPIOE
+#define DEBUG_LED_Pin GPIO_PIN_3
+#define DEBUG_LED_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 
