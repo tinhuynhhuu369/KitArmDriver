@@ -349,6 +349,12 @@
                 <option>
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$/../../0_Common_Use</state>
+                    <state>$PROJ_DIR$/../../1_Application</state>
+                    <state>$PROJ_DIR$/../../3_Hardware_Core</state>
+                    <state>$PROJ_DIR$/../../3_Hardware_Core/BSP</state>
+                    <state>$PROJ_DIR$/../../3_Hardware_Core/Drivers/</state>
+                    <state>$PROJ_DIR$/../../3_Hardware_Core/Drivers/inc</state>
+                    <state>$PROJ_DIR$/../../3_Hardware_Core/startup</state>
                     <state>$PROJ_DIR$/../../STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Inc</state>
                     <state>$PROJ_DIR$/../../STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy</state>
                     <state>$PROJ_DIR$/../../STM32CubeMX/Drivers/CMSIS/Device/ST/STM32F4xx/Include</state>
@@ -1092,7 +1098,22 @@
         </file>
     </group>
     <group>
-        <name>Drivers</name>
+        <name>3_Hardware_Core</name>
+        <group>
+            <name>BSP</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\3_Hardware_Core\BSP\STM32F407ZET6.c</name>
+            </file>
+        </group>
+        <group>
+            <name>Drivers</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\GPIO.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\Timer.c</name>
+            </file>
+        </group>
         <group>
             <name>startup</name>
             <file>

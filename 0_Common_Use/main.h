@@ -16,9 +16,7 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __MAIN_H
 #define __MAIN_H
 
@@ -27,46 +25,7 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
-
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
-/* Exported types ------------------------------------------------------------*/
-/* USER CODE BEGIN ET */
-
-/* USER CODE END ET */
-
-/* Exported constants --------------------------------------------------------*/
-/* USER CODE BEGIN EC */
-
-/* USER CODE END EC */
-
-/* Exported macro ------------------------------------------------------------*/
-/* USER CODE BEGIN EM */
-
-/* USER CODE END EM */
-
-/* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
-
-/* USER CODE BEGIN EFP */
-
-/* USER CODE END EFP */
-
-/* Private defines -----------------------------------------------------------*/
-#define Y0_Pin GPIO_PIN_5
-#define Y0_GPIO_Port GPIOE
-#define Y1_Pin GPIO_PIN_6
-#define Y1_GPIO_Port GPIOE
-#define DEBUG_LED_Pin GPIO_PIN_3
-#define DEBUG_LED_GPIO_Port GPIOA
-
-/* USER CODE BEGIN Private defines */
-
-/* USER CODE END Private defines */
+#include "STM32F407ZET6.h"
 
 #ifdef __cplusplus
 }

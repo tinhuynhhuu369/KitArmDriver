@@ -1433,7 +1433,22 @@
         </file>
     </group>
     <group>
-        <name>Drivers</name>
+        <name>3_Hardware_Core</name>
+        <group>
+            <name>BSP</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\3_Hardware_Core\BSP\STM32F407ZET6.c</name>
+            </file>
+        </group>
+        <group>
+            <name>Drivers</name>
+            <file>
+                <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\GPIO.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\Timer.c</name>
+            </file>
+        </group>
         <group>
             <name>startup</name>
             <file>
