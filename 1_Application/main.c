@@ -18,6 +18,39 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include <stdio.h>
+
+/* Number of bytes clocked in per SPI debug read */
+#define SPI_DEBUG_LEN   2U
+
+/**
+  * @brief  Clock SPI_DEBUG_LEN bytes on SPI1 and print what was received.
+  *         printf goes to IAR Terminal I/O via semihosting.
+  * @retval None
+  */
+static void SPI_DebugPrint(void)
+{
+  uint8_t rxBuf[SPI_DEBUG_LEN] = {0};
+  HAL_StatusTypeDef status;
+
+  HAL_GPIO_WritePin(BTN_LOAD_GPIO_Port, BTN_LOAD_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(BTN_LOAD_GPIO_Port, BTN_LOAD_Pin, GPIO_PIN_SET);
+  status = HAL_SPI_Receive(&hspi1, rxBuf, SPI_DEBUG_LEN, 100);
+
+  if (status != HAL_OK)
+  {
+    printf("[%lu] SPI error: status=%d, err=0x%lX\r\n",
+           (unsigned long)HAL_GetTick(), (int)status, (unsigned long)hspi1.ErrorCode);
+    return;
+  }
+
+  printf("[%lu] SPI RX:", (unsigned long)HAL_GetTick());
+  for (uint32_t i = 0; i < SPI_DEBUG_LEN; i++)
+  {
+    printf(" 0x%02X", rxBuf[i]);
+  }
+  printf("\r\n");
+}
 
 /**
   * @brief  The application entry point.
@@ -31,13 +64,11 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    HAL_GPIO_WritePin(Y0_GPIO_Port, Y0_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(Y1_GPIO_Port, Y1_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
-    HAL_Delay(1000);
-    HAL_GPIO_WritePin(Y0_GPIO_Port, Y0_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(Y1_GPIO_Port, Y1_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_TogglePin(Y0_GPIO_Port, Y0_Pin);
+    HAL_GPIO_TogglePin(Y1_GPIO_Port, Y1_Pin);
+    HAL_GPIO_TogglePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin);
+
+    SPI_DebugPrint();
     HAL_Delay(1000);
   }
 }

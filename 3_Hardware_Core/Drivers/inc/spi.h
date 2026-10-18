@@ -8,11 +8,12 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "STM32F407ZET6.h"
 
-/* Exported functions prototypes ---------------------------------------------*/
-SPI_HandleTypeDef hspi1;
-DMA_HandleTypeDef hdma_spi1_rx;
-DMA_HandleTypeDef hdma_spi1_tx;
+/* Exported variables --------------------------------------------------------*/
+extern SPI_HandleTypeDef hspi1;
+extern DMA_HandleTypeDef hdma_spi1_rx;
+extern DMA_HandleTypeDef hdma_spi1_tx;
 
+/* Exported functions prototypes ---------------------------------------------*/
 void MX_DMA_Init(void);
 void MX_SPI1_Init(void);
 

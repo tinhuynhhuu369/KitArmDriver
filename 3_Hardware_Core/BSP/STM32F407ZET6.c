@@ -73,6 +73,7 @@ void HardwareInit(void)
     MX_GPIO_Init();
 
     // SPI for button and led7Seg
+    HAL_GPIO_WritePin(BTN_LOAD_GPIO_Port, BTN_LOAD_Pin, GPIO_PIN_SET);
     MX_DMA_Init();
     MX_SPI1_Init();
 }

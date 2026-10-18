@@ -8,6 +8,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "HardwareProfile.h"
 #include "GPIO.h"
+#include "spi.h"
 
 /* Exported functions prototypes ---------------------------------------------*/
 void HardwareInit(void);
