@@ -1446,6 +1446,9 @@
                 <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\GPIO.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\spi.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\Timer.c</name>
             </file>
         </group>
