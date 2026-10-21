@@ -1,7 +1,7 @@
 #include "Button.h"
 
-static uint16_t Pressed_Buttons[BUTTON_LEN] = {0};
-static uint16_t BUTTON_ARRAY[BUTTON_COUNT] = 
+static uint8_t Pressed_Buttons[BUTTON_LEN] = {0};
+static uint16_t BUTTON_MASK[BUTTON_COUNT] = 
 {
     BTN_01,
     BTN_02,
@@ -20,7 +20,12 @@ static uint16_t BUTTON_ARRAY[BUTTON_COUNT] =
     BTN_15,
     BTN_16 
 };
-static void (*Pressed_Key_fhandle[16](void)) = {NULL};
+void (*Pressed_Key_fhandle[BUTTON_COUNT])(void) = {NULL};
+
+static uint16_t Button_GetRaw(void)
+{
+    return (uint16_t)~(((uint16_t)Pressed_Buttons[0] << 8) | Pressed_Buttons[1]);
+}
 
 void Button_Init(void)
 {
@@ -44,8 +49,7 @@ void Button_Scan(void)
 
     for(uint8_t i = 0; i < BUTTON_COUNT; i++)
     {
-        
-        if((Pressed_Buttons[i] & BUTTON_ARRAY[i]) != 0)
+        if((Button_GetRaw() & BUTTON_MASK[i]) != 0)
         {
             HAL_Delay(TIMEOUT_DEBOUNCE);
 
@@ -53,9 +57,13 @@ void Button_Scan(void)
             HAL_GPIO_WritePin(BTN_LOAD_GPIO_Port, BTN_LOAD_Pin, GPIO_PIN_SET);
             status = HAL_SPI_Receive(&hspi1, Pressed_Buttons, BUTTON_LEN, 10);
 
-            if((Pressed_Buttons[i] & BUTTON_ARRAY[i]) != 0)
+            if((Button_GetRaw() & BUTTON_MASK[i]) != 0)
             {
-                if (Pressed_Key_fhandle[i] != NULL) Pressed_Key_fhandle[i]();
+                // if (Pressed_Key_fhandle[i] != NULL) 
+                // {
+                    printf("BTN %d pressed\n", i);
+                // }
+                // Pressed_Key_fhandle[i]();
             }
         }
     }
