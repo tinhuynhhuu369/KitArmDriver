@@ -1,5 +1,5 @@
-#ifndef __GPIO_H
-#define __GPIO_H
+#ifndef __TIMER_H
+#define __TIMER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,4 +15,4 @@ extern "C" {
 }
 #endif
 
-#endif /* __GPIO_H */
+#endif /* __TIMER_H */

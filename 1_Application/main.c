@@ -64,12 +64,11 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    HAL_GPIO_TogglePin(Y0_GPIO_Port, Y0_Pin);
-    HAL_GPIO_TogglePin(Y1_GPIO_Port, Y1_Pin);
-    HAL_GPIO_TogglePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin);
+    // HAL_GPIO_TogglePin(Y0_GPIO_Port, Y0_Pin);
+    // HAL_GPIO_TogglePin(Y1_GPIO_Port, Y1_Pin);
+    // HAL_GPIO_TogglePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin);
 
-    SPI_DebugPrint();
-    HAL_Delay(1000);
+    Button_Scan();
   }
 }
 
