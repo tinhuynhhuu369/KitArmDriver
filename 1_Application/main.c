@@ -18,6 +18,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "led7seg.h"
 #include <stdio.h>
 
 /* Number of bytes clocked in per SPI debug read */
@@ -60,6 +61,7 @@ int main(void)
 {
 
   HardwareInit();
+  HAL_TIM_Base_Start_IT(&htim3);
 
   while (1)
   {
@@ -67,7 +69,12 @@ int main(void)
     // HAL_GPIO_TogglePin(Y0_GPIO_Port, Y0_Pin);
     // HAL_GPIO_TogglePin(Y1_GPIO_Port, Y1_Pin);
     // HAL_GPIO_TogglePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin);
-
+    if (tim3_flag)
+    {
+      tim3_flag = 0;
+      // test_led7Seg();
+      LED7_Scan();
+    }
     Button_Scan();
   }
 }

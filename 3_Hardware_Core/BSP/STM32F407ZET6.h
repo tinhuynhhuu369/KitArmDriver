@@ -9,6 +9,8 @@ extern "C" {
 #include "HardwareProfile.h"
 #include "GPIO.h"
 #include "spi.h"
+#include "Timer.h"
+#include "led7seg.h"
 
 /* Exported functions prototypes ---------------------------------------------*/
 void HardwareInit(void);

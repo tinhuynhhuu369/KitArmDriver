@@ -76,4 +76,5 @@ void HardwareInit(void)
     HAL_GPIO_WritePin(BTN_LOAD_GPIO_Port, BTN_LOAD_Pin, GPIO_PIN_SET);
     MX_DMA_Init();
     MX_SPI1_Init();
+    MX_TIM3_Init();
 }

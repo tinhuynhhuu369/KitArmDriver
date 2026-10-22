@@ -9,7 +9,11 @@ extern "C" {
 #include "STM32F407ZET6.h"
 
 /* Exported functions prototypes ---------------------------------------------*/
+extern TIM_HandleTypeDef htim3;
+extern volatile uint8_t tim3_flag;
 
+void MX_TIM3_Init(void);
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 
 #ifdef __cplusplus
 }
