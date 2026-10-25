@@ -61,7 +61,7 @@ int main(void)
   uint8_t btn;
 
   HardwareInit();
-  HAL_TIM_Base_Start_IT(&htim3);
+  HAL_TIM_PWM_Start(&htim13, TIM_CHANNEL_1);   /* bật counter + output CH1 (PF8) cho buzzer */
 
   while (1)
   {
@@ -69,23 +69,29 @@ int main(void)
     // HAL_GPIO_TogglePin(Y0_GPIO_Port, Y0_Pin);
     // HAL_GPIO_TogglePin(Y1_GPIO_Port, Y1_Pin);
     // HAL_GPIO_TogglePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin);
-    if (tim3_flag)
-    {
-      tim3_flag = 0;
-      // test_led7Seg();
-      LED7_Scan();
-    }
-    if (tim3_1s_flag)
-    {
-      tim3_1s_flag = 0;
-      LED7_ToggleExtLeds();   /* LED6, LED7, LED8 nhấp nháy mỗi 1 s */
-    }
-    btn = Button_Scan();
-    if (btn != 0)
-    {
-      LED7_SetNumber(btn);    /* hiển thị số thứ tự nút vừa nhấn */
+  //   if (tim3_flag)
+  //   {
+  //     tim3_flag = 0;
+  //     // test_led7Seg();
+  //     LED7_Scan();
+  //   }
+  //   if (tim3_1s_flag)
+  //   {
+  //     tim3_1s_flag = 0;
+  //     LED7_ToggleExtLeds();   /* LED6, LED7, LED8 nhấp nháy mỗi 1 s */
+  //   }
+  //   btn = Button_Scan();
+  //   if (btn != 0)
+  //   {
+  //     LED7_SetNumber(btn);    /* hiển thị số thứ tự nút vừa nhấn */
+  //   }
+    uint16_t melody[] = {262, 294, 330, 349, 392, 440, 494, 523};
+    for (int i = 0; i < 8; i++) {
+        Buzzer_Beep(melody[i], 300);
+        HAL_Delay(50);               // khoảng nghỉ giữa các nốt
     }
   }
+    
 }
 
 #ifdef USE_FULL_ASSERT

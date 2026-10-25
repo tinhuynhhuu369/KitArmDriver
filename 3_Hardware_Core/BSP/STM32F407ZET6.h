@@ -12,6 +12,7 @@ extern "C" {
 #include "Timer.h"
 #include "led7seg.h"
 #include "Button.h"
+#include "Buzzer.h"
 
 /* Exported functions prototypes ---------------------------------------------*/
 void HardwareInit(void);
