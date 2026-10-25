@@ -12,8 +12,8 @@ extern "C" {
 
 
 /* Exported functions prototypes ---------------------------------------------*/
-void Buzzer_Tone(uint32_t freq);
-void Buzzer_Beep(uint32_t freq, uint32_t ms);
+void Buzzer_Play_Melody(void);
+void Buzzer_Beep(uint32_t ms);
 
 #ifdef __cplusplus
 }

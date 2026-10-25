@@ -78,6 +78,7 @@ void HardwareInit(void)
     MX_SPI1_Init();
     MX_TIM3_Init();
     MX_TIM13_Init();
+    HAL_TIM_Base_Start_IT(&htim3);
 
     LED7_Init();
 }
