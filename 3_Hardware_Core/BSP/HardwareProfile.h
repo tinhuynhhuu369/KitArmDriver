@@ -15,8 +15,8 @@ extern "C" {
 #define Y1_GPIO_Port GPIOE
 #define DEBUG_LED_Pin GPIO_PIN_3
 #define DEBUG_LED_GPIO_Port GPIOA
-#define LD_LATCH_Pin GPIO_PIN_4
-#define LD_LATCH_GPIO_Port GPIOA
+#define LD_LATCH_Pin GPIO_PIN_6
+#define LD_LATCH_GPIO_Port GPIOG
 #define BTN_LOAD_Pin GPIO_PIN_3
 #define BTN_LOAD_GPIO_Port GPIOD
 

@@ -18,7 +18,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "led7seg.h"
 #include <stdio.h>
 
 /* Number of bytes clocked in per SPI debug read */
@@ -53,6 +52,24 @@ static void SPI_DebugPrint(void)
   printf("\r\n");
 }
 
+/* Đồng hồ đếm lên MM:SS, bắt đầu từ 00:00 */
+static uint8_t clockMin = 0;
+static uint8_t clockSec = 0;
+
+/**
+  * @brief  Tăng đồng hồ thêm 1 giây (59:59 -> 00:00) và cập nhật LED 7 đoạn.
+  * @retval None
+  */
+static void Clock_Tick1s(void)
+{
+  if (++clockSec >= 60U)
+  {
+    clockSec = 0;
+    if (++clockMin >= 60U) clockMin = 0;
+  }
+  LED7_SetTime(clockMin, clockSec);
+}
+
 /**
   * @brief  The application entry point.
   * @retval int
@@ -74,6 +91,11 @@ int main(void)
       tim3_flag = 0;
       // test_led7Seg();
       LED7_Scan();
+    }
+    if (tim3_1s_flag)
+    {
+      tim3_1s_flag = 0;
+      Clock_Tick1s();
     }
     Button_Scan();
   }

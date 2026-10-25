@@ -2,6 +2,8 @@
 
 TIM_HandleTypeDef htim3;
 volatile uint8_t tim3_flag = 0;
+volatile uint8_t tim3_1s_flag = 0;
+static uint16_t tim3_ms = 0;
 
 /**
   * @brief TIM3 Initialization Function
@@ -22,9 +24,9 @@ void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 209;
+  htim3.Init.Prescaler = 83;      /* 84 MHz / 84  = 1 MHz */
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 9999;
+  htim3.Init.Period = 999;        /* 1 MHz / 1000 = 1 kHz -> 1 ms */
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
@@ -110,5 +112,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if(htim->Instance == TIM3) {
     tim3_flag = 1;
+    if (++tim3_ms >= TIM3_TICKS_PER_SEC) {
+      tim3_ms = 0;
+      tim3_1s_flag = 1;
+    }
   }
 }

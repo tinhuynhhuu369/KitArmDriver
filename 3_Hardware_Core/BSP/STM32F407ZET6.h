@@ -11,6 +11,7 @@ extern "C" {
 #include "spi.h"
 #include "Timer.h"
 #include "led7seg.h"
+#include "Button.h"
 
 /* Exported functions prototypes ---------------------------------------------*/
 void HardwareInit(void);
