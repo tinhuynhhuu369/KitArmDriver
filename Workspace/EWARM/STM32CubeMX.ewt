@@ -1449,7 +1449,13 @@
                 <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\Buzzer.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\FSMC.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\GPIO.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\LCD.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\led7seg.c</name>

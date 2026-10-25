@@ -59,9 +59,12 @@ static void SPI_DebugPrint(void)
 int main(void)
 {
   uint8_t btn;
+  /* Bảng màu RGB565 để test LCD: đỏ, xanh lá, xanh dương, trắng, đen */
+  static const uint16_t lcdColors[] = {0xF800, 0x07E0, 0x001F, 0xFFFF, 0x0000};
+  uint8_t lcdColorIdx = 0;
 
   HardwareInit();
-
+  LCD_fill(0x0000);
   while (1)
   {
     /* USER CODE END WHILE */
@@ -78,6 +81,8 @@ int main(void)
     {
       tim3_1s_flag = 0;
       LED7_ToggleExtLeds();   /* LED6, LED7, LED8 nhấp nháy mỗi 1 s */
+      LCD_fill(lcdColors[lcdColorIdx]);   /* đổi màu LCD mỗi 1 s */
+      lcdColorIdx = (lcdColorIdx + 1U) % (sizeof(lcdColors) / sizeof(lcdColors[0]));
     }
     btn = Button_Scan();
     if (btn != 0)
@@ -86,7 +91,7 @@ int main(void)
       Buzzer_Beep(10);
     }
   }
-    
+   
 }
 
 #ifdef USE_FULL_ASSERT

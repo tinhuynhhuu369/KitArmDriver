@@ -13,6 +13,8 @@ extern "C" {
 #include "led7seg.h"
 #include "Button.h"
 #include "Buzzer.h"
+#include "FSMC.h"
+#include "LCD.h"
 
 /* Exported functions prototypes ---------------------------------------------*/
 void HardwareInit(void);

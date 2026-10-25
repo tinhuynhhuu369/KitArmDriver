@@ -63,10 +63,14 @@ void Error_Handler(void);
 #define Y0_GPIO_Port GPIOE
 #define Y1_Pin GPIO_PIN_6
 #define Y1_GPIO_Port GPIOE
+#define FSMC_RES_Pin GPIO_PIN_13
+#define FSMC_RES_GPIO_Port GPIOC
 #define DEBUG_LED_Pin GPIO_PIN_3
 #define DEBUG_LED_GPIO_Port GPIOA
 #define LD_LATCH_Pin GPIO_PIN_6
 #define LD_LATCH_GPIO_Port GPIOG
+#define FSMC_BLK_Pin GPIO_PIN_8
+#define FSMC_BLK_GPIO_Port GPIOA
 #define BTN_LOAD_Pin GPIO_PIN_3
 #define BTN_LOAD_GPIO_Port GPIOD
 

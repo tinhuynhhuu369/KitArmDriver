@@ -81,4 +81,6 @@ void HardwareInit(void)
     HAL_TIM_Base_Start_IT(&htim3);
 
     LED7_Init();
+    MX_FSMC_Init();
+    LCD_init();
 }
