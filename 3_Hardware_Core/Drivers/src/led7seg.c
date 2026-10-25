@@ -54,9 +54,6 @@ void LED7_Init(void)
     colonOn = false;
     LED7_Clear();
     LED7_Write(U14_DIG_ALL | U14_COLON, 0xFF);   /* tắt hết */
-
-    LED7_SetTime(0, 0);   /* 00:00 */
-    LED7_SetColon(true);
 }
 
 void LED7_SetDigit(uint8_t pos, uint8_t value)
@@ -76,6 +73,28 @@ void LED7_SetTime(uint8_t mm, uint8_t ss)
     LED7_SetDigit(1, (uint8_t)(mm % 10));
     LED7_SetDigit(2, (uint8_t)((ss / 10) % 10));
     LED7_SetDigit(3, (uint8_t)(ss % 10));
+}
+
+/**
+  * @brief  Hiển thị số 0..9999, căn phải, các số 0 đứng đầu để trống.
+  */
+void LED7_SetNumber(uint16_t num)
+{
+    num %= 10000U;
+    for (int pos = LED7_DIGIT_COUNT - 1; pos >= 0; pos--)
+    {
+        if (num == 0 && pos != LED7_DIGIT_COUNT - 1) LED7_SetDigit((uint8_t)pos, LED7_BLANK);
+        else LED7_SetDigit((uint8_t)pos, (uint8_t)(num % 10));
+        num /= 10;
+    }
+}
+
+/**
+  * @brief  Đảo trạng thái LED6, LED7, LED8.
+  */
+void LED7_ToggleExtLeds(void)
+{
+    extLeds ^= (U14_LED6 | U14_LED7 | U14_LED8);
 }
 
 /**

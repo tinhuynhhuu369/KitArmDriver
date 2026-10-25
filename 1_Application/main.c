@@ -52,30 +52,13 @@ static void SPI_DebugPrint(void)
   printf("\r\n");
 }
 
-/* Đồng hồ đếm lên MM:SS, bắt đầu từ 00:00 */
-static uint8_t clockMin = 0;
-static uint8_t clockSec = 0;
-
-/**
-  * @brief  Tăng đồng hồ thêm 1 giây (59:59 -> 00:00) và cập nhật LED 7 đoạn.
-  * @retval None
-  */
-static void Clock_Tick1s(void)
-{
-  if (++clockSec >= 60U)
-  {
-    clockSec = 0;
-    if (++clockMin >= 60U) clockMin = 0;
-  }
-  LED7_SetTime(clockMin, clockSec);
-}
-
 /**
   * @brief  The application entry point.
   * @retval int
   */
 int main(void)
 {
+  uint8_t btn;
 
   HardwareInit();
   HAL_TIM_Base_Start_IT(&htim3);
@@ -95,9 +78,13 @@ int main(void)
     if (tim3_1s_flag)
     {
       tim3_1s_flag = 0;
-      Clock_Tick1s();
+      LED7_ToggleExtLeds();   /* LED6, LED7, LED8 nhấp nháy mỗi 1 s */
     }
-    Button_Scan();
+    btn = Button_Scan();
+    if (btn != 0)
+    {
+      LED7_SetNumber(btn);    /* hiển thị số thứ tự nút vừa nhấn */
+    }
   }
 }
 

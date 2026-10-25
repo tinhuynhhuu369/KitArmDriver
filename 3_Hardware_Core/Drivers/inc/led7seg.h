@@ -23,6 +23,8 @@ void LED7_Clear(void);
 void LED7_SetDigit(uint8_t pos, uint8_t value);
 void LED7_SetColon(bool on);
 void LED7_SetTime(uint8_t mm, uint8_t ss);
+void LED7_SetNumber(uint16_t num);
+void LED7_ToggleExtLeds(void);
 void LED7_Scan(void);
 
 #ifdef __cplusplus

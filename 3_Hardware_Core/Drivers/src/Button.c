@@ -32,9 +32,11 @@ void Button_Init(void)
     HAL_GPIO_WritePin(BTN_LOAD_GPIO_Port, BTN_LOAD_Pin, GPIO_PIN_RESET);
 }
 
-void Button_Scan(void)
+uint8_t Button_Scan(void)
 {
+    static uint16_t prevRaw = 0;    /* trạng thái lần quét trước, để chỉ bắt sườn nhấn */
     HAL_StatusTypeDef status;
+    uint16_t newPress;
 
     HAL_GPIO_WritePin(BTN_LOAD_GPIO_Port, BTN_LOAD_Pin, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(BTN_LOAD_GPIO_Port, BTN_LOAD_Pin, GPIO_PIN_SET);
@@ -44,27 +46,32 @@ void Button_Scan(void)
     {
         printf("[%lu] SPI error: status=%d, err=0x%lX\r\n",
             (unsigned long)HAL_GetTick(), (int)status, (unsigned long)hspi1.ErrorCode);
-        return;
+        return 0;
     }
+
+    /* Giữ nút thì không delay lại -> không làm khựng quét LED 7 đoạn */
+    newPress = Button_GetRaw() & (uint16_t)~prevRaw;
+    if (newPress == 0)
+    {
+        prevRaw = Button_GetRaw();
+        return 0;
+    }
+
+    HAL_Delay(TIMEOUT_DEBOUNCE);
+
+    HAL_GPIO_WritePin(BTN_LOAD_GPIO_Port, BTN_LOAD_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(BTN_LOAD_GPIO_Port, BTN_LOAD_Pin, GPIO_PIN_SET);
+    status = HAL_SPI_Receive(&hspi1, Pressed_Buttons, BUTTON_LEN, 10);
+    if (status != HAL_OK) return 0;
+
+    prevRaw = Button_GetRaw();
 
     for(uint8_t i = 0; i < BUTTON_COUNT; i++)
     {
-        if((Button_GetRaw() & BUTTON_MASK[i]) != 0)
+        if((newPress & prevRaw & BUTTON_MASK[i]) != 0)
         {
-            HAL_Delay(TIMEOUT_DEBOUNCE);
-
-            HAL_GPIO_WritePin(BTN_LOAD_GPIO_Port, BTN_LOAD_Pin, GPIO_PIN_RESET);
-            HAL_GPIO_WritePin(BTN_LOAD_GPIO_Port, BTN_LOAD_Pin, GPIO_PIN_SET);
-            status = HAL_SPI_Receive(&hspi1, Pressed_Buttons, BUTTON_LEN, 10);
-
-            if((Button_GetRaw() & BUTTON_MASK[i]) != 0)
-            {
-                // if (Pressed_Key_fhandle[i] != NULL) 
-                // {
-                    printf("BTN %d pressed\n", i);
-                // }
-                // Pressed_Key_fhandle[i]();
-            }
+            return (uint8_t)(i + 1);
         }
     }
+    return 0;
 }

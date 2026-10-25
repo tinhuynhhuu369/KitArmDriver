@@ -32,7 +32,7 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Button_Init(void);
-void Button_Scan(void);
+uint8_t Button_Scan(void);   /* trả về số thứ tự nút vừa nhấn (1..16), 0 nếu không có */
 
 #ifdef __cplusplus
 }
