@@ -13,11 +13,14 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim13;
 extern volatile uint8_t tim3_flag;      /* set mỗi 1 ms */
 extern volatile uint8_t tim3_1s_flag;   /* set mỗi 1 s  */
 
 void MX_TIM3_Init(void);
+void MX_TIM13_Init(void);
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 #ifdef __cplusplus
 }

@@ -77,6 +77,7 @@ void HardwareInit(void)
     MX_DMA_Init();
     MX_SPI1_Init();
     MX_TIM3_Init();
+    MX_TIM13_Init();
 
     LED7_Init();
 }
