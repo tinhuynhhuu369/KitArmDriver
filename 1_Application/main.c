@@ -20,36 +20,30 @@
 #include "main.h"
 #include <stdio.h>
 
-/* Number of bytes clocked in per SPI debug read */
-#define SPI_DEBUG_LEN   2U
-
 /**
-  * @brief  Clock SPI_DEBUG_LEN bytes on SPI1 and print what was received.
-  *         printf goes to IAR Terminal I/O via semihosting.
+  * @brief  Vẽ một màn hình mẫu để test các hàm đồ hoạ LCD.
   * @retval None
   */
-static void SPI_DebugPrint(void)
+static void LCD_Demo(void)
 {
-  uint8_t rxBuf[SPI_DEBUG_LEN] = {0};
-  HAL_StatusTypeDef status;
+  LCD_fill(LCD_BLACK);
 
-  HAL_GPIO_WritePin(BTN_LOAD_GPIO_Port, BTN_LOAD_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(BTN_LOAD_GPIO_Port, BTN_LOAD_Pin, GPIO_PIN_SET);
-  status = HAL_SPI_Receive(&hspi1, rxBuf, SPI_DEBUG_LEN, 100);
+  LCD_Write_String(10, 10, "KitArmDriver", LCD_WHITE, LCD_BLACK, 2);
+  LCD_Write_String(10, 32, "LCD test: 0123456789", LCD_YELLOW, LCD_BLACK, 1);
 
-  if (status != HAL_OK)
-  {
-    printf("[%lu] SPI error: status=%d, err=0x%lX\r\n",
-           (unsigned long)HAL_GetTick(), (int)status, (unsigned long)hspi1.ErrorCode);
-    return;
-  }
+  LCD_Draw_Line(0, 45, LCD_W - 1, 45, LCD_GRAY);
+  LCD_Draw_Line(10, 55, 110, 115, LCD_CYAN);
 
-  printf("[%lu] SPI RX:", (unsigned long)HAL_GetTick());
-  for (uint32_t i = 0; i < SPI_DEBUG_LEN; i++)
-  {
-    printf(" 0x%02X", rxBuf[i]);
-  }
-  printf("\r\n");
+  LCD_Draw_Rectangle(130, 55, 100, 60, LCD_GREEN);
+  LCD_Fill_Rectangle(140, 65, 80, 40, LCD_BLUE);
+
+  LCD_Draw_Circle(60, 175, 45, LCD_RED);
+  LCD_Fill_Circle(60, 175, 25, LCD_ORANGE);
+
+  LCD_Draw_Triangle(130, 220, 230, 220, 180, 130, LCD_MAGENTA);
+  LCD_Fill_Triangle(150, 210, 210, 210, 180, 160, LCD_YELLOW);
+
+  LCD_Write_String(10, 250, "Hello\nSTM32F407!", LCD_BLACK, LCD_WHITE, 3);
 }
 
 /**
@@ -59,30 +53,21 @@ static void SPI_DebugPrint(void)
 int main(void)
 {
   uint8_t btn;
-  /* Bảng màu RGB565 để test LCD: đỏ, xanh lá, xanh dương, trắng, đen */
-  static const uint16_t lcdColors[] = {0xF800, 0x07E0, 0x001F, 0xFFFF, 0x0000};
-  uint8_t lcdColorIdx = 0;
-
   HardwareInit();
-  LCD_fill(0x0000);
+  LCD_Demo();
+
   while (1)
   {
     /* USER CODE END WHILE */
-    // HAL_GPIO_TogglePin(Y0_GPIO_Port, Y0_Pin);
-    // HAL_GPIO_TogglePin(Y1_GPIO_Port, Y1_Pin);
-    // HAL_GPIO_TogglePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin);
     if (tim3_flag)
     {
       tim3_flag = 0;
-      // test_led7Seg();
       LED7_Scan();
     }
     if (tim3_1s_flag)
     {
       tim3_1s_flag = 0;
       LED7_ToggleExtLeds();   /* LED6, LED7, LED8 nhấp nháy mỗi 1 s */
-      LCD_fill(lcdColors[lcdColorIdx]);   /* đổi màu LCD mỗi 1 s */
-      lcdColorIdx = (lcdColorIdx + 1U) % (sizeof(lcdColors) / sizeof(lcdColors[0]));
     }
     btn = Button_Scan();
     if (btn != 0)
