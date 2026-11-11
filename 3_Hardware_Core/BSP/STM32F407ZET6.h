@@ -15,6 +15,7 @@ extern "C" {
 #include "Buzzer.h"
 #include "FSMC.h"
 #include "LCD.h"
+#include "I2C.h"
 
 /* Exported functions prototypes ---------------------------------------------*/
 void HardwareInit(void);

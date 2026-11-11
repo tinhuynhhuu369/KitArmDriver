@@ -1120,6 +1120,9 @@
                 <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\GPIO.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\I2C.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\LCD.c</name>
             </file>
             <file>

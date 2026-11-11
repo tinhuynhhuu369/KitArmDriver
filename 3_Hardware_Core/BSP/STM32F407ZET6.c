@@ -83,4 +83,6 @@ void HardwareInit(void)
     LED7_Init();
     MX_FSMC_Init();
     LCD_init();
+
+    MX_I2C1_Init();
 }
