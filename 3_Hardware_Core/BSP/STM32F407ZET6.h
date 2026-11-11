@@ -16,6 +16,10 @@ extern "C" {
 #include "FSMC.h"
 #include "LCD.h"
 #include "I2C.h"
+#include "AT24C512.h"
+#include "DS3231.h"
+#include "DS3231.h"
+#include "AT24C512.h"
 
 /* Exported functions prototypes ---------------------------------------------*/
 void HardwareInit(void);

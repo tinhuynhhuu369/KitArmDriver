@@ -91,3 +91,39 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c)
   }
 
 }
+
+/**
+  * @brief  Quét toàn bộ dải địa chỉ 7-bit (0x08 - 0x77) trên bus I2C.
+  * @param  hi2c: I2C handle pointer
+  * @param  found: mảng nhận các địa chỉ 7-bit có ACK (có thể NULL)
+  * @param  max_found: kích thước mảng found
+  * @retval Số thiết bị phản hồi, hoặc -1 nếu bus bị treo
+  */
+int16_t I2C_Scan(I2C_HandleTypeDef *hi2c, uint8_t *found, uint8_t max_found)
+{
+  int16_t count = 0;
+  uint8_t addr;
+  HAL_StatusTypeDef ret;
+
+  for (addr = I2C_ADDR_FIRST; addr <= I2C_ADDR_LAST; addr++)
+  {
+    /* HAL dùng địa chỉ dạng 8-bit (dịch trái 1). 2 lần thử, timeout 5 ms */
+    ret = HAL_I2C_IsDeviceReady(hi2c, (uint16_t)(addr << 1), 2, 5);
+
+    if (ret == HAL_OK)
+    {
+      if ((found != NULL) && (count < max_found))
+      {
+        found[count] = addr;
+      }
+      count++;
+    }
+    else if (ret == HAL_BUSY)
+    {
+      /* BUSY không tự xoá -> thiếu điện trở kéo lên hoặc slave giữ SDA */
+      return -1;
+    }
+  }
+
+  return count;
+}

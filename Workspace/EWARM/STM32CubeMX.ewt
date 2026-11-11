@@ -1443,10 +1443,16 @@
         <group>
             <name>Drivers</name>
             <file>
+                <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\AT24C512.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\Button.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\Buzzer.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\DS3231.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\FSMC.c</name>
