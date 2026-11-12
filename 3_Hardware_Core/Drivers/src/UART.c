@@ -1,6 +1,11 @@
 #include "UART.h"
+#include <string.h>
 
 UART_HandleTypeDef huart3;
+
+static uint8_t rs485_rx_buf[RS485_RX_BUF_SIZE];
+static volatile uint16_t rs485_rx_len = 0;
+static volatile uint8_t  rs485_rx_done = 0;
 
 /**
   * @brief USART3 Initialization Function
@@ -92,4 +97,65 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     /* USER CODE END USART3_MspDeInit 1 */
   }
 
+}
+
+/**
+  * @brief  MAX485 về chế độ thu (RS485_EN = 0) và bắt đầu nhận bằng ngắt.
+  */
+void RS485_Init(void)
+{
+  HAL_GPIO_WritePin(RS485_EN_GPIO_Port, RS485_EN_Pin, GPIO_PIN_RESET);
+  HAL_UARTEx_ReceiveToIdle_IT(&huart3, rs485_rx_buf, RS485_RX_BUF_SIZE);
+}
+
+/**
+  * @brief  Gửi dữ liệu qua RS485: RS485_EN = 1 -> gửi -> RS485_EN = 0.
+  */
+HAL_StatusTypeDef RS485_Send(const uint8_t *data, uint16_t len)
+{
+  HAL_StatusTypeDef st;
+
+  HAL_GPIO_WritePin(RS485_EN_GPIO_Port, RS485_EN_Pin, GPIO_PIN_SET);
+  st = HAL_UART_Transmit(&huart3, (uint8_t *)data, len, 100);  /* trả về khi đã gửi xong byte cuối (TC) */
+  HAL_GPIO_WritePin(RS485_EN_GPIO_Port, RS485_EN_Pin, GPIO_PIN_RESET);
+
+  return st;
+}
+
+/**
+  * @brief  Lấy message vừa nhận (kết thúc khi đường truyền rảnh).
+  * @retval Số byte nhận được, 0 nếu chưa có message mới.
+  */
+uint16_t RS485_Receive(uint8_t *buf, uint16_t max_len)
+{
+  uint16_t len;
+
+  if (!rs485_rx_done)
+  {
+    return 0;
+  }
+
+  len = (rs485_rx_len < max_len) ? rs485_rx_len : max_len;
+  memcpy(buf, rs485_rx_buf, len);
+  rs485_rx_done = 0;
+
+  HAL_UARTEx_ReceiveToIdle_IT(&huart3, rs485_rx_buf, RS485_RX_BUF_SIZE);  /* nhận message tiếp */
+  return len;
+}
+
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
+{
+  if (huart->Instance == USART3)
+  {
+    rs485_rx_len  = Size;
+    rs485_rx_done = 1;
+  }
+}
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+{
+  if (huart->Instance == USART3)
+  {
+    HAL_UARTEx_ReceiveToIdle_IT(&huart3, rs485_rx_buf, RS485_RX_BUF_SIZE);  /* lỗi (overrun...) -> nhận lại */
+  }
 }

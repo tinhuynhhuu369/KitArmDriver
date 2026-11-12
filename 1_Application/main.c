@@ -45,6 +45,9 @@
 #define DEMO_Y_ADC_LDR   264
 #define DEMO_Y_ADC_RLDR  284
 
+/* Message nhận qua RS485 để bật LED */
+#define RS485_LED_MSG    "LED_ON"
+
 /* Private variables ---------------------------------------------------------*/
 static uint8_t rtc_ok = 0;          /* 1 nếu DS3231 phản hồi lúc khởi tạo */
 static uint8_t rtc_last_sec = 0xFF; /* chỉ vẽ lại khi giây thay đổi */
@@ -351,7 +354,7 @@ static void Sensor_Demo_Init(void)
 /**
   * @brief  Đọc adc_buf (DMA) -> đổi ra đơn vị thực -> vẽ lên LCD.
   *         Kênh: [0]=LM35 nhiệt độ, [1]=biến trở, [2]=LDR.
-  *         Gọi định kỳ trong vòng lặp chính (ví dụ mỗi 200 ms).
+  *         Gọi định kỳ trong vòng lặp chính (main gọi mỗi 1 s).
   * @retval None
   */
 static void Sensor_Demo_Update(void)
@@ -404,6 +407,28 @@ static void Sensor_Demo_Update(void)
 }
 
 /**
+  * @brief  Demo RS485 (USART3 + MAX485): nhận đúng message RS485_LED_MSG -> bật LED.
+  *         Phía PC: USB-RS485, 115200 8N1.
+  */
+static void RS485_Demo(void)
+{
+  uint8_t rx[RS485_RX_BUF_SIZE];
+  uint16_t len = RS485_Receive(rx, sizeof(rx));
+
+  /* Bỏ CR/LF ở cuối nếu terminal tự thêm khi nhấn Enter */
+  while ((len > 0U) && ((rx[len - 1U] == '\r') || (rx[len - 1U] == '\n')))
+  {
+    len--;
+  }
+
+  if ((len == sizeof(RS485_LED_MSG) - 1U) && (memcmp(rx, RS485_LED_MSG, len) == 0))
+  {
+    HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
+    RS485_Send((const uint8_t *)"OK\r\n", 4);
+  }
+}
+
+/**
   * @brief  Màn hình demo 2 thiết bị I2C: EEPROM AT24C512 + RTC DS3231.
   * @retval None
   */
@@ -430,6 +455,7 @@ int main(void)
 {
   uint8_t btn;
   uint32_t rtc_tick;
+  uint32_t sensor_tick;
   HardwareInit();
   LCD_Demo();
   HAL_Delay(2000);
@@ -437,6 +463,7 @@ int main(void)
   HAL_Delay(2000);
   I2C_Devices_Demo();
   rtc_tick = HAL_GetTick();
+  sensor_tick = rtc_tick;
 
   while (1)
   {
@@ -445,8 +472,16 @@ int main(void)
     {
       rtc_tick = HAL_GetTick();
       RTC_Demo_Update();
+    }
+
+    /* Đọc lại sensor ADC mỗi 1 s */
+    if ((HAL_GetTick() - sensor_tick) >= 1000U)
+    {
+      sensor_tick = HAL_GetTick();
       Sensor_Demo_Update();
     }
+
+    RS485_Demo();
 
     /* USER CODE END WHILE */
     if (tim3_flag)

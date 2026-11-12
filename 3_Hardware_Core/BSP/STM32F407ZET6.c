@@ -114,4 +114,5 @@ void HardwareInit(void)
     MX_Sensor_Init();
 
     MX_USART3_UART_Init();
+    RS485_Init();           // MAX485 về chế độ thu + bắt đầu nhận bằng ngắt
 }

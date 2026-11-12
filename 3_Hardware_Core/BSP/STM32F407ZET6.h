@@ -21,6 +21,7 @@ extern "C" {
 #include "DS3231.h"
 #include "AT24C512.h"
 #include "Sensor.h"
+#include "UART.h"
 
 extern DMA_HandleTypeDef hdma_spi1_rx;
 extern DMA_HandleTypeDef hdma_spi1_tx;
