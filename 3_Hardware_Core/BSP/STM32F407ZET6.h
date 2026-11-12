@@ -20,11 +20,17 @@ extern "C" {
 #include "DS3231.h"
 #include "DS3231.h"
 #include "AT24C512.h"
+#include "Sensor.h"
+
+extern DMA_HandleTypeDef hdma_spi1_rx;
+extern DMA_HandleTypeDef hdma_spi1_tx;
+extern DMA_HandleTypeDef hdma_adc1;
 
 /* Exported functions prototypes ---------------------------------------------*/
 void HardwareInit(void);
 void Error_Handler(void);
 void SystemClock_Config(void);
+void MX_DMA_Init(void);
 
 #ifdef __cplusplus
 }

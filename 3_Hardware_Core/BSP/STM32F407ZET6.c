@@ -1,6 +1,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "STM32F407ZET6.h"
 
+DMA_HandleTypeDef hdma_spi1_rx;
+DMA_HandleTypeDef hdma_spi1_tx;
+DMA_HandleTypeDef hdma_adc1;
+
 /**
   * @brief  This function is executed in case of error occurrence.
   * @retval None
@@ -61,6 +65,28 @@ void SystemClock_Config(void)
   }
 }
 
+/**
+  * Enable DMA controller clock
+  */
+void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA2_CLK_ENABLE();
+
+  /* DMA2_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+  /* DMA interrupt init */
+  /* DMA2_Stream2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
+  /* DMA2_Stream3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
+
+}
+
 void HardwareInit(void)
 {
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
@@ -85,4 +111,5 @@ void HardwareInit(void)
     LCD_init();
 
     MX_I2C1_Init();
+    MX_ADC1_Init();
 }
