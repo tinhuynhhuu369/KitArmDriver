@@ -111,5 +111,5 @@ void HardwareInit(void)
     LCD_init();
 
     MX_I2C1_Init();
-    MX_ADC1_Init();
+    MX_Sensor_Init();
 }

@@ -1,6 +1,7 @@
 #include "Sensor.h"
 
 ADC_HandleTypeDef hadc1;
+volatile uint16_t adc_buf[3];   // [0]=TEMP, [1]=RES, [2]=LIGHT
 
 /**
   * @brief ADC1 Initialization Function
@@ -144,4 +145,11 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     /* USER CODE END ADC1_MspDeInit 1 */
   }
 
+}
+
+void MX_Sensor_Init(void)
+{
+  MX_ADC1_Init();
+
+  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_buf, 3);
 }

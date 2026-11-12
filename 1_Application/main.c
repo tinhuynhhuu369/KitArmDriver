@@ -38,6 +38,13 @@
 #define DEMO_Y_RTC_DATE  156
 #define DEMO_Y_RTC_TEMP  182
 
+/* Toạ độ Y các dòng sensor ADC (nằm dưới phần RTC) */
+#define DEMO_Y_ADC_HDR   208
+#define DEMO_Y_ADC_TEMP  224
+#define DEMO_Y_ADC_RES   244
+#define DEMO_Y_ADC_LDR   264
+#define DEMO_Y_ADC_RLDR  284
+
 /* Private variables ---------------------------------------------------------*/
 static uint8_t rtc_ok = 0;          /* 1 nếu DS3231 phản hồi lúc khởi tạo */
 static uint8_t rtc_last_sec = 0xFF; /* chỉ vẽ lại khi giây thay đổi */
@@ -332,6 +339,71 @@ static void RTC_Demo_Update(void)
 }
 
 /**
+  * @brief  Vẽ phần tiêu đề của khối hiển thị sensor ADC.
+  * @retval None
+  */
+static void Sensor_Demo_Init(void)
+{
+  LCD_Draw_Line(0, DEMO_Y_ADC_HDR - 6, LCD_W - 1, DEMO_Y_ADC_HDR - 6, LCD_GRAY);
+  LCD_Write_String(10, DEMO_Y_ADC_HDR, "ADC sensors (DMA)", LCD_YELLOW, LCD_BLACK, 1);
+}
+
+/**
+  * @brief  Đọc adc_buf (DMA) -> đổi ra đơn vị thực -> vẽ lên LCD.
+  *         Kênh: [0]=LM35 nhiệt độ, [1]=biến trở, [2]=LDR.
+  *         Gọi định kỳ trong vòng lặp chính (ví dụ mỗi 200 ms).
+  * @retval None
+  */
+static void Sensor_Demo_Update(void)
+{
+  uint16_t raw[3];
+  char buf[32];
+  uint8_t i;
+
+  /* Chụp nhanh buffer DMA để 3 kênh cùng một thời điểm */
+  for (i = 0; i < 3U; i++)
+  {
+    raw[i] = adc_buf[i];
+  }
+
+  float v_temp  = raw[0] * VREF / ADC_MAX;
+  float v_light = raw[2] * VREF / ADC_MAX;
+
+  float temp_c  = v_temp * 100.0f;                 /* LM35: 10 mV/°C */
+  float res_pct = raw[1] * 100.0f / ADC_MAX;       /* biến trở: 0-100 % */
+
+  /* LDR: V = 3.3 * R_ldr / (R_ldr + 10k)  =>  R_ldr = 10k * V / (3.3 - V) */
+  float r_ldr = (v_light < VREF - 0.05f)
+              ? 10000.0f * v_light / (VREF - v_light)
+              : 1e6f;                              /* rất tối */
+
+  /* In số thực bằng số nguyên đã nhân sẵn (tránh phụ thuộc %f) */
+  int32_t t10  = (int32_t)(temp_c * 10.0f + 0.5f);          /* 0.1 °C */
+  int32_t p10  = (int32_t)(res_pct * 10.0f + 0.5f);         /* 0.1 %  */
+  int32_t mv   = (int32_t)(v_light * 1000.0f + 0.5f);       /* mV     */
+  int32_t rk10 = (int32_t)(r_ldr / 100.0f + 0.5f);          /* 0.1 kOhm */
+
+  sprintf(buf, "Temp : %ld.%01ld C   ", (long)(t10 / 10), (long)(t10 % 10));
+  LCD_Write_String(10, DEMO_Y_ADC_TEMP, buf, LCD_GREEN, LCD_BLACK, 2);
+
+  sprintf(buf, "Res  : %ld.%01ld %%   ", (long)(p10 / 10), (long)(p10 % 10));
+  LCD_Write_String(10, DEMO_Y_ADC_RES, buf, LCD_CYAN, LCD_BLACK, 2);
+
+  sprintf(buf, "Light: %ld.%03ld V  ", (long)(mv / 1000), (long)(mv % 1000));
+  LCD_Write_String(10, DEMO_Y_ADC_LDR, buf, LCD_ORANGE, LCD_BLACK, 2);
+
+  if (r_ldr >= 1e6f)
+  {
+    sprintf(buf, "LDR  : >1000 k   ");
+  }
+  else
+  {
+    sprintf(buf, "LDR  : %ld.%01ld k   ", (long)(rk10 / 10), (long)(rk10 % 10));
+  }
+  LCD_Write_String(10, DEMO_Y_ADC_RLDR, buf, LCD_WHITE, LCD_BLACK, 2);
+}
+
+/**
   * @brief  Màn hình demo 2 thiết bị I2C: EEPROM AT24C512 + RTC DS3231.
   * @retval None
   */
@@ -346,6 +418,8 @@ static void I2C_Devices_Demo(void)
   LCD_Draw_Line(0, 80, LCD_W - 1, 80, LCD_GRAY);
   RTC_Demo_Init();
   RTC_Demo_Update();
+  Sensor_Demo_Init();
+  Sensor_Demo_Update();
 }
 
 /**
@@ -371,6 +445,7 @@ int main(void)
     {
       rtc_tick = HAL_GetTick();
       RTC_Demo_Update();
+      Sensor_Demo_Update();
     }
 
     /* USER CODE END WHILE */
