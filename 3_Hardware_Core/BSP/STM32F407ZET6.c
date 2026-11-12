@@ -112,4 +112,6 @@ void HardwareInit(void)
 
     MX_I2C1_Init();
     MX_Sensor_Init();
+
+    MX_USART3_UART_Init();
 }

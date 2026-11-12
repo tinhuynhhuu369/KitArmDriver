@@ -71,6 +71,8 @@ void Error_Handler(void);
 #define LD_LATCH_GPIO_Port GPIOG
 #define FSMC_BLK_Pin GPIO_PIN_8
 #define FSMC_BLK_GPIO_Port GPIOA
+#define RS485_EN_Pin GPIO_PIN_15
+#define RS485_EN_GPIO_Port GPIOA
 #define BTN_LOAD_Pin GPIO_PIN_3
 #define BTN_LOAD_GPIO_Port GPIOD
 

@@ -52,6 +52,8 @@ DMA_HandleTypeDef hdma_spi1_tx;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim13;
 
+UART_HandleTypeDef huart3;
+
 SRAM_HandleTypeDef hsram1;
 
 /* USER CODE BEGIN PV */
@@ -68,6 +70,7 @@ static void MX_TIM13_Init(void);
 static void MX_FSMC_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_ADC1_Init(void);
+static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -113,6 +116,7 @@ int main(void)
   MX_FSMC_Init();
   MX_I2C1_Init();
   MX_ADC1_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -407,6 +411,39 @@ static void MX_TIM13_Init(void)
 }
 
 /**
+  * @brief USART3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART3_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART3_Init 0 */
+
+  /* USER CODE END USART3_Init 0 */
+
+  /* USER CODE BEGIN USART3_Init 1 */
+
+  /* USER CODE END USART3_Init 1 */
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 115200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART3_Init 2 */
+
+  /* USER CODE END USART3_Init 2 */
+
+}
+
+/**
   * Enable DMA controller clock
   */
 static void MX_DMA_Init(void)
@@ -457,7 +494,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(FSMC_RES_GPIO_Port, FSMC_RES_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, DEBUG_LED_Pin|FSMC_BLK_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, DEBUG_LED_Pin|FSMC_BLK_Pin|RS485_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LD_LATCH_GPIO_Port, LD_LATCH_Pin, GPIO_PIN_RESET);
@@ -479,8 +516,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(FSMC_RES_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : DEBUG_LED_Pin FSMC_BLK_Pin */
-  GPIO_InitStruct.Pin = DEBUG_LED_Pin|FSMC_BLK_Pin;
+  /*Configure GPIO pins : DEBUG_LED_Pin FSMC_BLK_Pin RS485_EN_Pin */
+  GPIO_InitStruct.Pin = DEBUG_LED_Pin|FSMC_BLK_Pin|RS485_EN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

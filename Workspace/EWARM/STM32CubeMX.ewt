@@ -1478,6 +1478,9 @@
             <file>
                 <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\Timer.c</name>
             </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\3_Hardware_Core\Drivers\src\UART.c</name>
+            </file>
         </group>
         <group>
             <name>startup</name>
